@@ -1,0 +1,44 @@
+name: Build and Push Docker image
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout your Spring Boot project
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Set up Java (for building JAR)
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      # Build the Spring Boot JAR
+      - name: Build with Maven
+        run: mvn clean package -DskipTests
+
+      # Log in to Docker Hub
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.arjundhatbale }}
+          password: ${{ secrets.Admin@151168 }}
+
+      # Build Docker image (two tags: latest + Git commit SHA)
+      - name: Build Docker image
+        run: |
+          docker build -t arjundhatbale/secondhubrepo:latest .
+          docker tag arjundhatbale/secondhubrepo:latest arjundhatbale/secondhubrepo:${{ github.sha }}
+
+      # Push both tags
+      - name: Push Docker image
+        run: |
+          docker push arjundhatbale/secondhubrepo:latest
+          docker push arjundhatbale/secondhubrepo:${{ github.sha }}
