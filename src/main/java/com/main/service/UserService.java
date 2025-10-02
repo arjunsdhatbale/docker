@@ -32,4 +32,9 @@ public class UserService {
         logger.info("Service request receive for get All users.");
         return this.userRepo.findAll();
     }
+
+    public String deleteUserById(Long id) {
+        this.userRepo.deleteById(id);
+        return "User Deleted successfully";
+    }
 }
