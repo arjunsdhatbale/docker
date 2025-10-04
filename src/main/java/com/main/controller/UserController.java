@@ -2,6 +2,7 @@ package com.main.controller;
 
 import com.main.entity.UserEntity;
 import com.main.service.UserService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.apache.catalina.User;
 import org.slf4j.Logger;
@@ -16,33 +17,40 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
+@RequestMapping("/user")
 @CrossOrigin(origins = "http://localhost:4200")
 public class UserController {
     private final static Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private final UserService userService;
 
-    @RequestMapping(path = "/user", method = RequestMethod.POST)
+    @PostMapping
     public ResponseEntity<UserEntity> saveUser(@RequestBody UserEntity user){
         logger.info("Request receive to Save User.");
         UserEntity response = this.userService.saveUser(user);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @RequestMapping(path = "/user", method = RequestMethod.GET)
+    @GetMapping
     public ResponseEntity<List<UserEntity>> getAllUsers(){
         logger.info("Request receive to getAll users .");
         List<UserEntity> response = this.userService.getAllUsers();
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
-    @RequestMapping(path = "/id", method = RequestMethod.DELETE)
-    public ResponseEntity<String> deleteUser(@RequestParam("id") Long id){
-        logger.info("Request received to delete user by userid: {}.",id);
-        String responce = this.userService.deleteUserById(id);
-        return ResponseEntity.ok().body(responce);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        logger.info("Request received to delete user by userid: {}.", id);
+        try {
+            userService.deleteUserById(id);
+            logger.info("User with id {} deleted successfully.", id);
+            return ResponseEntity.noContent().build();
+        } catch (EntityNotFoundException e) {
+            logger.error("User with id {} not found.", id);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            logger.error("Error deleting user with id {}: {}", id, e.getMessage());
+            return ResponseEntity.internalServerError().build();
+        }
     }
-
-
-
 }
