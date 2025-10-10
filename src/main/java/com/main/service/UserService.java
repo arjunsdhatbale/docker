@@ -30,7 +30,7 @@ public class UserService {
     public UserEntity saveUser(UserEntity user) {
         logger.info("Service request received to save user.");
         UserEntity savedUser = this.userRepo.save(user);
-        return this.userRepo.save(savedUser);
+        return savedUser;
     }
 
     public List<UserEntity> getAllUsers() {
