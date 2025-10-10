@@ -5,33 +5,32 @@ services:
     image: mysql:8.0
     container_name: mysql-db
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: test
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root           # Root password
+      MYSQL_DATABASE: test                # Database name
+      MYSQL_USER: testuser                # Regular user
+      MYSQL_PASSWORD: testpass            # Regular user password
     ports:
-      - "3307:3306"  # Using 3307 on host to avoid conflicts
+      - "3307:3306"
     volumes:
       - mysql-data:/var/lib/mysql
     networks:
       - app-network
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-root"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
       interval: 5s
       timeout: 3s
       retries: 30
-    restart: unless-stopped
 
   app:
-    build: .
+    image: arjundhatbale/docker-app:latest
     container_name: spring-app
     depends_on:
       mysql:
         condition: service_healthy
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/test?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/test?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: testuser    # Using regular user
+      SPRING_DATASOURCE_PASSWORD: testpass    # Using regular user password
     ports:
       - "8080:8080"
     networks:

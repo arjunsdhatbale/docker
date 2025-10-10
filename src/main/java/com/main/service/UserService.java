@@ -1,17 +1,17 @@
 package com.main.service;
 
+import com.main.dto.UserDto;
 import com.main.entity.UserEntity;
 import com.main.repo.UserRepo;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import com.main.utils.GenericMapper;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -21,14 +21,16 @@ import java.util.Optional;
 public class UserService {
     private final static Logger logger = LoggerFactory.getLogger(UserService.class);
     private final UserRepo userRepo;
+    private final GenericMapper genericMapper;
 
-    public UserService(UserRepo userRepo){
+    public UserService(UserRepo userRepo, GenericMapper genericMapper){
         this.userRepo = userRepo;
+        this.genericMapper = genericMapper;
     }
-
     public UserEntity saveUser(UserEntity user) {
         logger.info("Service request received to save user.");
-        return this.userRepo.save(user);
+        UserEntity savedUser = this.userRepo.save(user);
+        return this.userRepo.save(savedUser);
     }
 
     public List<UserEntity> getAllUsers() {
@@ -45,4 +47,20 @@ public class UserService {
         this.userRepo.deleteById(id);
         return "User Deleted successfully";
     }
+
+    @Transactional
+    public UserDto updateUser(Long id, UserDto userDto) {
+        UserEntity existingUser = this.userRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+
+        GenericMapper.copyNonNullProperties(userDto, existingUser);
+        UserEntity updatedUser = userRepo.save(existingUser);
+        return genericMapper.map(updatedUser,UserDto.class);
+    }
+
+    public UserEntity getUser(Long id) {
+        return userRepo.findById(id).orElseThrow(() -> new RuntimeException("User not found by id: " + id));
+    }
+
+
 }
