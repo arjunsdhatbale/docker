@@ -50,9 +50,9 @@ public class ProductService {
         return (ProductDto) productEntityToProductDto(Collections.singletonList(productEntity));
     }
 
-    public ProductDto updateProduct(Long id) {
-        Optional<ProductEntity> productEntityOptional = Optional.o
-    }
+//    public ProductDto updateProduct(Long id) {
+//        Optional<ProductEntity> productEntityOptional = Optional.o
+//    }
 }
 
 

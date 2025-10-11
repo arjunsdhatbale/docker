@@ -41,12 +41,12 @@ public class ProductController {
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<ProductDto> updateProduct(@PathVariable("id") Long id){
-        logger.info("Request received to update Product by id: {}.",id);
-        ProductDto response = productService.updateProduct(id);
-        return new ResponseEntity<>(response,HttpStatus.OK);
-    }
+//    @PatchMapping("/{id}")
+//    public ResponseEntity<ProductDto> updateProduct(@PathVariable("id") Long id){
+//        logger.info("Request received to update Product by id: {}.",id);
+//        ProductDto response = productService.updateProduct(id);
+//        return new ResponseEntity<>(response,HttpStatus.OK);
+//    }
 
 }
 
