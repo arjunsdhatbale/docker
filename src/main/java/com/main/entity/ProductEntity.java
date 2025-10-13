@@ -1,4 +1,4 @@
-package com.main.controller;
+package com.main.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

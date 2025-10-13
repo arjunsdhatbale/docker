@@ -1,12 +1,9 @@
 package com.main.service;
 
-import com.main.controller.ProductEntity;
+import com.main.entity.ProductEntity;
 import com.main.dto.ProductDto;
 import com.main.repo.ProductRepo;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.ArrayList;
 import java.util.Collections;

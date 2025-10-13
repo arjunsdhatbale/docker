@@ -29,35 +29,35 @@ public class UserController {
     public UserController(UserService userService){
         this.userService = userService;
     }
-    @PostMapping
+    @PostMapping("/save-user")
     public ResponseEntity<UserEntity> saveUser(@RequestBody UserEntity user){
         logger.info("Request receive to Save User.");
         UserEntity response = this.userService.saveUser(user);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/update-user/{id}")
     public ResponseEntity<UserDto> updateUser(@PathVariable("id") Long id, @RequestBody UserDto userDto){
         logger.info("Request received to update user by id: {}.", id);
         UserDto response = userService.updateUser(id,userDto);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
-    @GetMapping("/")
+    @GetMapping("/get-all-user")
     public ResponseEntity<List<UserEntity>> getAllUsers(){
         logger.info("Request receive to getAll users .");
         List<UserEntity> response = this.userService.getAllUsers();
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/get-user-by-id/{id}")
     public ResponseEntity<UserEntity> getUser(@PathVariable Long id){
         logger.info("Request received to get user by id: {}.", id);
         UserEntity user = userService.getUser(id);
         return ResponseEntity.ok(user);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete-user-by-id/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         logger.info("Request received to delete user by userid: {}.", id);
         try {
