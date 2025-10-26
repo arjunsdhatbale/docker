@@ -4,11 +4,8 @@ import com.main.dto.UserDto;
 import com.main.entity.UserEntity;
 import com.main.repo.UserRepo;
 import com.main.utils.GenericMapper;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,14 +35,13 @@ public class UserService {
         return this.userRepo.findAll();
     }
 
-    public String deleteUserById(Long id) {
+    public void deleteUserById(Long id) {
         logger.info("Service request received to delete user by id: {}.", id);
         Optional<UserEntity> user = this.userRepo.findById(id);
         if(!user.isPresent()){
             throw  new ResponseStatusException(HttpStatus.NOT_FOUND,"user not found with id : " + id);
         }
         this.userRepo.deleteById(id);
-        return "User Deleted successfully";
     }
 
     @Transactional
